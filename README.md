@@ -9,6 +9,9 @@
 * [Problema 1](#problema-1)
     * [Descripción del Problema](#descripción-del-problema)
     * [Solución](#solución)
+        * [Hechos](#hechos)
+        * [Reglas](#reglas)
+        * [Culpable](#culpable)
 * [Problema 3](#problema-3)
     * [Reverso de lista](#reverso-de-lista)
     * [Palíndromo](#palíndromo)
@@ -61,7 +64,175 @@ De lo acontecido durante el funeral de Marta se sabe lo siguiente:
 
 ### Hechos
 
-Los hechos más importantes fueron
+Los hechos más importantes fueron:
+
+* Definir los hijos y las hijas
+
+Con el hecho:
+
+```prolog
+% si es hijo
+hijo(hijo,progenitor_hijo) .
+% si es hija
+hija(hija,progenitor_hija) .
+```
+
+Los hijos se detallan a continuación:
+
+#### Tabla I
+
+|Hijo/a|Padre/Madre|
+|:--:|:--:|
+|Diana,Rachel,May,Barry|Marta,Bruce|
+|Mary,Harry|Diana,Peter|
+|Clark,Lois|Rachel,Enrique|
+|Ezio,Lorenzo,Sergio|May,Ben|
+|Lara,Tony|Pepper,Barry|
+
+Se creo un hecho por cada hijo en la tabla anterior.
+
+* Definir los padres
+
+Se ha definido una regla para cada padre (incluyendo madre)
+
+```prolog
+padre(padre_o_madre, [lista_hijos]) :- ! .
+```
+
+Las reglas se definieron según la [Tabla I](#tabla-i).
+
+* Definir las parejas
+
+Se han definido las perejas con una regla de la siguiente manera:
+
+```prolog
+% la persona 'p1' es pareja de la persona 'p2'
+pareja(p1,p2) :- ! .
+```
+
+Las reglas para las parejas se crearon según la siguiente tabla:
+
+#### Tabla II
+
+|Parejas|
+|:--:|
+|Marta y Bruce|
+|Diana y Peter|
+|Rachel y Enrique|
+|May y Ben|
+|Pepper y Barry|
+
+* Definir los hermanos
+
+Se crearon los hechos: 
+
+```prolog
+% si es hermano
+hermano(el_hermano, [lista_de_hermanos]) .
+% si es hermana
+hermana(la_hermana, [lista_de_hermanos]) .
+```
+
+Los hermanos se definieron para cada hijo descrito en la [Tabla I](#tabla-i)
+
+### Reglas
+
+* Para saber si es hermano
+
+Para determinar si dos personas son hermanos, se crea la siguiente regla
+
+```prolog
+esHermano(X,Y) :- hermano(X, Hermanos) , member(Y,Hermanos) ;
+                hermana(X, Hermanos), member(Y, Hermanos).
+```
+
+Es verdadero si la persona `X` está en los hechos de hermanos y su hermano `Y` pertenece a la lista de hermanos mediante el predicado member [[3]](#3).
+
+* Para saber si es hijo
+
+Determina que dos personas tengan relación de padre/madre e hijo/hija con ayuda del hecho `hija` e `hijo`.
+
+```prolog
+esHijo(Padre, Hijo) :- hijo(Hijo, Padre) ; hija(Hijo, Padre).
+```
+
+* Para saber si dos personas son primos/primas
+
+Determina que `primo1` sea primo con `primo2`, para esto debe cumplirse que alguno de los papás de los primos deben ser hermanos:
+
+```prolog
+primo(Primo1,Primo2) :- 
+        % busca el padre de 'Primo1' y lo almacena en 'Padre1'
+        esHijo(Padre1,Primo1), 
+        % busca el padre de 'Primo2' y lo almacena en 'Padre2'
+        esHijo(Padre2,Primo2), 
+        % verifica que 'Padre1' y 'Padre2' sean hermanos
+        esHermano(Padre1,Padre2) .
+```
+
+* Para saber si es un sobrino
+
+Determina que `Posible_tio` tenga como sobrino a `Posible_sobrino` verificando que el hijo del `tío` sea primo con el `sobrino`.
+
+```prolog
+sobrino(Posible_tio, Posible_sobrino) :- 
+        % busca algun hijo del 'Posible_tio' y lo almacena en 'Hijo'
+        esHijo(Posible_tio, Hijo), 
+        % verifica que el 'Hijo' encontrado sea primo con 'Posible_sobrino'
+        primo(Hijo,Posible_sobrino).
+```
+
+* Para saber si es un tío
+
+Verifica que la `Persona` tenga como tío a `Posible_tio` mediante la regla anterior de `sobrino`
+
+```prolog
+tio(Persona, Posible_tio) :- sobrino(Posible_tio, Persona) .
+```
+
+* Para saber si es abuelo o abuela
+
+Determina si `Abuelo` tiene como nieto a `Nieto` 
+
+```prolog
+esAbuelo(Abuelo,Nieto) :- 
+        % busca el padre de 'Nieto' y lo almacena en 'Padre'
+        esHijo(Padre, Nieto), 
+        % busca que el padre de 'Padre' sea 'Abuelo' para que sea verdadera la relación
+        esHijo(Abuelo, Padre).
+```
+
+* Imprimir árbol
+
+Imprime el árbol de familia a partir de la `Persona` dada con ayuda del predicado forall [[4]](#4) para que imprima todos los hijos de la `Persona` si es que los tiene.
+
+```prolog
+arbol(Persona) :- pareja(Persona, Esposo), tab(10), write(Persona), write('--'), write(Esposo), nl,
+                forall(esHijo(Persona, Hijo), (tab(5),write('  |  '))),nl, 
+                forall(esHijo(Persona, Hijo), (tab(5),write(Hijo))),nl,
+                forall(esHijo(Persona, Hijo), imprimirHijos(Hijo)).
+```
+
+![](img/arbol.png)
+
+### Culpable
+
+Para determinar al culpable se realizó la siguiente regla
+
+```prolog
+esCulpable(Culpable) :- 
+        % tiene como abuelo a Bruce
+        esAbuelo(bruce, Culpable),
+        % tiene como primo a Clark
+        primo(clark, Culpable),
+        % tiene como tío a Barry
+        tio(Culpable, barry),
+        % tiene una hermana (debe pertenecer a la lista de hermanos de quien sea su hermana)
+        % los tres antecedentes se saben por su hermana
+        hermana(_,Hermanos), member(Culpable,Hermanos).
+```
+
+![](img/culpable.png)
 
 # Problema 3
 
@@ -331,3 +502,10 @@ SWI-Prolog. (2020). Predicate reverse/2. septiembre 4, 2021, de SWI-Prolog Sitio
 ## 2
 SWI-Prolog. (2020). Predicate round/1. septiembre 6, 2021, de SWI-Prolog Sitio web: 
 https://eu.swi-prolog.org/pldoc/man?function=round/1
+
+## 3
+SWI-Prolog. (2020). Predicate member/2. septiembre 6, 2021, de SWI-Prolog Sitio web:
+https://eu.swi-prolog.org/pldoc/doc_for?object=member/2
+
+## 4
+SWI-Prolog. (2020). Predicate forall/2. septiembre 6, 2021, de SWI-Prolog Sitio web: https://www.swi-prolog.org/pldoc/doc_for?object=forall/2
