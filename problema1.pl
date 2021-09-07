@@ -1,75 +1,52 @@
 % Hijo(Persona1,  Persona2) persona  1  es  hijo  de  la persona 2:- ! .
-hijo(diana, marta) :- ! .
-hijo(diana, bruce) :- ! .
-hijo(rachel, marta) :- ! .
-hijo(rachel, bruce) :- ! .
-hijo(may, marta) :- ! .
-hijo(may, bruce) :- ! .
-hijo(enrique, marta) :- ! .
-hijo(enrique, bruce) :- ! .
+hija(diana, marta) .
+hija(diana, bruce) .
+hija(rachel, marta) .
+hija(rachel, bruce) .
+hija(may, marta) .
+hija(may, bruce) .
 
-hijo(mary, diana) :- ! .
-hijo(mary, peter) :- ! .
-hijo(harry, diana) :- ! .
-hijo(harry, peter) :- ! .
+hija(mary, diana) .
+hija(mary, peter) .
 
-hijo(clark,rachel) :- ! .
-hijo(clark,barry) :- ! .
-hijo(lois,rachel) :- ! .
-hijo(lois,barry) :- ! .
+hija(lara, pepper) .
+hija(lara, barry) .
 
-hijo(ezio,may) :- ! .
-hijo(ezio,ben) :- ! .
-hijo(lorenzo,may) :- ! .
-hijo(lorenzo,ben) :- ! .
-hijo(sergio,may) :- ! .
-hijo(sergio,ben) :- ! .
 
-hijo(tony, pepper) :- ! .
-hijo(lara, pepper) :- ! .
-hijo(tony, enrique) :- ! .
-hijo(lara, enrique) :- ! .
+hijo(barry, marta) .
+hijo(barry, bruce) .
+
+hijo(harry, diana) .
+hijo(harry, peter) .
+
+hijo(clark,rachel) .
+hijo(clark,enrique) .
+hijo(lois,rachel) .
+hijo(lois,enrique) .
+
+hijo(ezio,may) .
+hijo(ezio,ben) .
+hijo(lorenzo,may) .
+hijo(lorenzo,ben) .
+hijo(sergio,may) .
+hijo(sergio,ben) .
+
+hijo(tony, pepper) .
+hijo(tony, barry) .
 
 % Padre/Madre(Persona1, Persona2)  persona 1 es padre o madre de la persona 2
-padre(bruce, [may,rachel,diana,enrique]) :- ! .
-padre(peter, [may, harry]) :- ! .
-padre(barry, [clark,lois]) :- ! .
-padre(may, [ezio,lorenzo,sergio]) :- ! .
-padre(enrique, [lara,tony]) :- ! .
 
-padre(marta, [may,rachel,diana,enrique]) :- ! .
-padre(diana, [may, harry]) :- ! .
-padre(rachel, [clark,lois]) :- ! .
-padre(ben, [ezio,lorenzo,sergio]) :- ! .
-padre(pepper, [lara,tony]) :- ! .
 
 % Pareja(Persona1, Persona2) persona 1 es pareja de la persona 2.
 pareja(marta, bruce) :- ! .
 
 pareja(diana, peter) :- ! .
-pareja(rachel, barry) :- ! .
+pareja(rachel, enrique) :- ! .
 pareja(may, ben) :- ! .
-pareja(pepper,enrique) :- ! .
+pareja(pepper,barry) :- ! .
 
 % Hermano/Hermana(Persona1,  Persona2) persona 1 es hermano de la persona 2.
-hermano([rachel,may,enrique], diana) :- ! .
-hermano([diana,may,enrique], rachel) :- ! .
-hermano([rachel,diana,enrique], may) :- ! .
-hermano([rachel,may,diana], enrique) :- ! .
 
-
-hermano([ezio,sergio], lorenzo) :- ! .
-hermano([lorenzo,sergio], ezio) :- ! .
-hermano([ezio,lorenzo], sergio) :- ! .
-
-hermano([mary], harry) :- ! .
-hermano([harry], mary) :- ! .
-
-hermano([clark], lois) :- ! .
-hermano([lois], clark) :- ! .
-
-hermano([lara], tony) :- ! .
-hermano([tony], lara) :- ! .
 
 
 %%%%%%%%%%%%%%%% REGLAS %%%%%%%%%%%%%%%%%%%
